@@ -14,7 +14,6 @@
 	Drag multiple files onto program -> Upload multiple files to pomf.se
 
 #ce ----------------------------------------------------------------------------
-
 #include <WinHTTP.au3> ; http://code.google.com/p/autoit-winhttp/downloads/list
 
 $sUserAgent = 'User-Agent: AutoIT-pomfloader (v. 0.1 alpha) p-please dont ban'
@@ -46,10 +45,7 @@ Func _pomf($sImagePath);Credits to Achat
 	Local $sResponse = _InetReadWinHttp('POST', 'pomf.se', '/upload.php', '', $sSend, $sHeaders)
 	Local $aRegExp = StringRegExp($sResponse, '"url":"(.+?)"', 3)
 	If IsArray($aRegExp) Then InputBox("Files Successfully uploaded"," ","http://a.pomf.se/"$aRegExp[0],"",200,100)
-EndFunc   ;==>_EpvpImg
-
-;~ {"success":true,"error":null,"files":[{"hash":"9b7%d20a522d22afbe5f1b63725bfabb62f09979d","name":"Unbenannt-1.jpg","url":"kkkngd.jpg","size":"93539"}]}
-
+EndFunc   ;==>_pomf
 Func _InetReadWinHttp($sType, $sServerName, $sPath = Default, $sReferrer = Default, $sData = Default, $sHeader = Default, $fGetHeaders = Default, $iMode = Default)
 	Return _WinHttpSimpleRequest($hConnect, $sType, $sPath, $sReferrer, $sData, $sHeader, $fGetHeaders, $iMode)
 EndFunc   ;==>_InetReadWinHttp
