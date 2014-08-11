@@ -15,10 +15,10 @@
 	Adds "Create a Backup" to the Explorer-Contextmenu
 	Creates a .bak (Backup) of a file
 
- How to Install:
+ Installation:
 	Click "enable"
 
- How to Uninstall:
+ Uninstallation:
 	If you still got this script (or the compiled binary), click "disable"
 	If you deleted the binary, open up C:/Windows/BackUp.exe and click "disable"
 
