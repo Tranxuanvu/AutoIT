@@ -44,7 +44,7 @@ Func _pomf($sImagePath);Credits to Achat
 			'-----------------------------' & $iBoundary & '--' ;& @CRLF
 	Local $sResponse = _InetReadWinHttp('POST', 'pomf.se', '/upload.php', '', $sSend, $sHeaders)
 	Local $aRegExp = StringRegExp($sResponse, '"url":"(.+?)"', 3)
-	If IsArray($aRegExp) Then InputBox("Files Successfully uploaded"," ","http://a.pomf.se/"$aRegExp[0],"",200,100)
+	If IsArray($aRegExp) Then InputBox("Success"," ","http://a.pomf.se/"&$aRegExp[0],"",200,100)
 EndFunc   ;==>_pomf
 Func _InetReadWinHttp($sType, $sServerName, $sPath = Default, $sReferrer = Default, $sData = Default, $sHeader = Default, $fGetHeaders = Default, $iMode = Default)
 	Return _WinHttpSimpleRequest($hConnect, $sType, $sPath, $sReferrer, $sData, $sHeader, $fGetHeaders, $iMode)
