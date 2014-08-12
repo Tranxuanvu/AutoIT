@@ -29,7 +29,7 @@ Func Screenshot_window_png()
 EndFunc
 
 Func pomfload($sImagePath)
-	Local $sUserAgent = 'User-Agent: AutoIT-pomfloader (v. 0.1 alpha) p-please dont ban'
+	Local $sUserAgent = 'User-Agent: AutoIT-pomfloader (v1.0 Stable) p-please dont ban'
 	Local $hSession = _WinHttpOpen($sUserAgent)
 	Local $hConnect = _WinHttpConnect($hSession, 'pomf.se')
 
