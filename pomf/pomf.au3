@@ -1,8 +1,13 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=pomf.ico
-#AutoIt3Wrapper_Res_Comment=pomf.se uploader
-#AutoIt3Wrapper_Res_Description=uploading to pomf.se...
-#AutoIt3Wrapper_Res_Fileversion=0.1
+#AutoIt3Wrapper_Res_Comment=pomf.se client
+#AutoIt3Wrapper_Res_Description=pomf.se client
+#AutoIt3Wrapper_Res_Fileversion=1.0
+#AutoIt3Wrapper_Res_Icon_Add=.\2.ico,12
+#AutoIt3Wrapper_Res_Icon_Add=.\3.ico,13
+#AutoIt3Wrapper_Res_Icon_Add=.\4.ico,14
+#AutoIt3Wrapper_Res_Icon_Add=.\5.ico,15
+#AutoIt3Wrapper_Res_Icon_Add=.\6.ico,16
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
 
@@ -39,15 +44,27 @@ TrayItemSetOnEvent(-1,"setting_directsave")
 TrayCreateItem("")
 Local $tray_exit = TrayCreateItem("Exit")
 TrayItemSetOnEvent(-1,"quit")
-TraySetToolTip("pomf client v0.1 by subnet-")
+TraySetToolTip("pomf client v1.0 by subnet-")
 
 Global $noGUI = False
 Global $directSave = False
 Global $directUpload = False
 Global $screenshot_window = False
 
+$spastic = 45; photoshop said the original value was 30, oh well
 while True
-	Sleep(60000)
+	Sleep($spastic)
+	TraySetIcon(@ScriptFullPath, 12)
+	Sleep($spastic)
+	TraySetIcon(@ScriptFullPath, 13)
+	Sleep($spastic)
+	TraySetIcon(@ScriptFullPath, 14)
+	Sleep($spastic)
+	TraySetIcon(@ScriptFullPath, 15)
+	Sleep($spastic)
+	TraySetIcon(@ScriptFullPath, 16)
+	Sleep($spastic)
+	TraySetIcon()
 WEnd
 
 Func quit()
