@@ -14,38 +14,95 @@
 	Drag multiple files onto program -> Upload multiple files to pomf.se
 
 #ce ----------------------------------------------------------------------------
-#include <WinHTTP.au3> ; http://code.google.com/p/autoit-winhttp/downloads/list
+#include <Client.au3> ; http://code.google.com/p/autoit-winhttp/downloads/list
 
-$sUserAgent = 'User-Agent: AutoIT-pomfloader (v. 0.1 alpha) p-please dont ban'
-$hSession = _WinHttpOpen($sUserAgent)
-$hConnect = _WinHttpConnect($hSession, 'pomf.se')
+HotKeySet("{PRINTSCREEN}","Screenshot")
 
-if ($cmdline[0] == 0) Then
-	$file = FileOpenDialog('Select File to upload', "" , '(*.*)',3)
-	if @error = 1 Then Exit
-	_pomf($file)
-Else
-	For $i=1 to $cmdline[0]
-		_pomf($cmdline[$i])
-	Next
-EndIf
+Opt("TrayMenuMode", 3)
+Opt("TrayOnEventMode", 1)
+TraySetState()
 
-_WinHttpCloseHandle($hConnect)
-_WinHttpCloseHandle($hSession)
+$tray_GUI = TrayCreateItem("Show GUI after Screencap")
+TrayItemSetOnEvent(-1,"setting_showgui")
+TrayItemSetState(-1,1)
+TrayCreateItem("")
+Local $tray_screenshot = TrayCreateItem("Screenshot whole Screen")
+TrayItemSetOnEvent(-1,"setting_screenshot")
+TrayItemSetState(-1,1)
+Local $tray_screenshot_window = TrayCreateItem("Screenshot active Window")
+TrayItemSetOnEvent(-1,"setting_screenshot_window")
+TrayCreateItem("")
+Local $tray_directUpload = TrayCreateItem("Enable Direct Upload")
+TrayItemSetOnEvent(-1,"setting_directupload")
+Local $tray_directSave = TrayCreateItem("Enable Direct Save")
+TrayItemSetOnEvent(-1,"setting_directsave")
+TrayCreateItem("")
+Local $tray_exit = TrayCreateItem("Exit")
+TrayItemSetOnEvent(-1,"quit")
+TraySetToolTip("pomf client v0.1 by subnet-")
 
-Func _pomf($sImagePath);Credits to Achat
-	Local $iBoundary = Random(13,37)
-	Local $bFileContent = FileRead($sImagePath)
-	Local $sHeaders = 'Content-Type: multipart/form-data; boundary=---------------------------' & $iBoundary
-	Local $sSend = @CRLF & '-----------------------------' & $iBoundary & @CRLF & _
-			'Content-Disposition: form-data; name="files[]"; filename="' & StringRegExpReplace($sImagePath, '.+\\', '') & '"' & @CRLF & _
-			'Content-Type: application/octet-stream' & @CRLF & @CRLF & _
-			$bFileContent & @CRLF & _
-			'-----------------------------' & $iBoundary & '--' ;& @CRLF
-	Local $sResponse = _InetReadWinHttp('POST', 'pomf.se', '/upload.php', '', $sSend, $sHeaders)
-	Local $aRegExp = StringRegExp($sResponse, '"url":"(.+?)"', 3)
-	If IsArray($aRegExp) Then InputBox("Success"," ","http://a.pomf.se/"&$aRegExp[0],"",200,100)
-EndFunc   ;==>_pomf
-Func _InetReadWinHttp($sType, $sServerName, $sPath = Default, $sReferrer = Default, $sData = Default, $sHeader = Default, $fGetHeaders = Default, $iMode = Default)
-	Return _WinHttpSimpleRequest($hConnect, $sType, $sPath, $sReferrer, $sData, $sHeader, $fGetHeaders, $iMode)
-EndFunc   ;==>_InetReadWinHttp
+Global $noGUI = False
+Global $directSave = False
+Global $directUpload = False
+Global $screenshot_window = False
+
+while True
+	Sleep(60000)
+WEnd
+
+Func quit()
+	Exit
+EndFunc
+
+Func Screenshot()
+	If $screenshot_window = False then Screenshot_png()
+	If $screenshot_window = True then Screenshot_window_png()
+	If $directUpload = True Then pomfload(@TempDir & "\pomf.png")
+	If $directSave = True Then FileMove(@TempDir & "\pomf.png",@UserProfileDir & "\Pictures\"&@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
+	If $noGUI = False Then pomfGUI()
+EndFunc
+
+Func setting_screenshot()
+	$screenshot_window = False
+	TrayItemSetState($tray_screenshot,1)
+	TrayItemSetState($tray_screenshot_window,4)
+EndFunc
+
+Func setting_screenshot_window()
+	$screenshot_window = True
+	TrayItemSetState($tray_screenshot_window,1)
+	TrayItemSetState($tray_screenshot,4)
+EndFunc
+
+Func setting_showgui()
+	$noGUI = False
+	$directSave = False
+	$directUpload = False
+	TrayItemSetState($tray_GUI,1)
+	TrayItemSetState($tray_directSave,4)
+	TrayItemSetState($tray_directUpload,4)
+EndFunc
+
+Func setting_directupload()
+	If (($directSave = False) And ($directUpload = True)) Then return setting_showgui()
+	$noGUI = True
+	$directUpload = not $directUpload
+	if $directUpload = True Then
+		TrayItemSetState($tray_GUI,4)
+		TrayItemSetState($tray_directUpload,1)
+	Else
+		TrayItemSetState($tray_directUpload,4)
+	EndIf
+EndFunc
+
+Func setting_directsave()
+	If (($directSave = True) And ($directUpload = False)) Then return setting_showgui()
+	$noGUI = True
+	$directSave = not $directSave
+	if $directSave = True Then
+		TrayItemSetState($tray_GUI,4)
+		TrayItemSetState($tray_directSave,1)
+	Else
+		TrayItemSetState($tray_directSave,4)
+	EndIf
+EndFunc
