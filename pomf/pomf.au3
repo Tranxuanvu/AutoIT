@@ -24,6 +24,9 @@
 
 If ($CmdLine[0] <> 0) Then
 	#NoTrayIcon
+	If ($CmdLine[0] > 3) Then
+		If (MsgBox(68,"pomf.se client","Do you really want to upload "&$CmdLine[0]& " Files?") == 7) Then Exit
+	EndIf
 	For $i = 1 to $CmdLine[0]
 		$filesize = (FileGetSize($CmdLine[$i]) / 1048576)
 		If $filesize <= 50 Then pomfload($CmdLine[$i])
@@ -61,7 +64,7 @@ TrayItemSetOnEvent(-1,"setting_savesetting")
 TrayCreateItem("")
 Local $tray_exit = TrayCreateItem("Exit")
 TrayItemSetOnEvent(-1,"quit")
-TraySetToolTip("pomf client v1.0 by subnet-")
+TraySetToolTip("pomf client v2.0 by subnet-")
 
 Global $noGUI = False
 Global $directSave = False
