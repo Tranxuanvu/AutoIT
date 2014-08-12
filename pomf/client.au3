@@ -28,45 +28,6 @@ Func Screenshot_window_png()
 	_WinAPI_DeleteObject($hBmp)
 EndFunc
 
-Func pomfGUI()
-	Local $GUI = GUICreate("Pomf Client",197,120,-1,-1,$WS_SYSMENU,$WS_EX_TOPMOST)
-	GUICtrlCreateLabel("Image Saved",0,10,197,20,$SS_CENTER)
-	Local $upload = GUICtrlCreateButton("Upload",10,35,80,20)
-	Local $save = GUICtrlCreateButton("Save",100,35,80,20)
-	Local $saveup = GUICtrlCreateButton("Save+Upload",10,62,80,20)
-	Local $view = GUICtrlCreateButton("View",100,62,80,20)
-	GUISetState(@SW_SHOW)
-
-	While 1
-		Switch GUIGetMsg()
-			Case $GUI_EVENT_CLOSE
-				GUIDelete($GUI)
-				FileDelete(@TempDir & "\pomf.png")
-				Return 0
-			Case $upload
-				GUIDelete($GUI)
-				pomfload(@TempDir & "\pomf.png")
-				FileDelete(@TempDir & "\pomf.png")
-				Return 1
-			Case $save
-				GUIDelete($GUI)
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
-				If @error Then Return
-				FileMove(@TempDir & "\pomf.png",$path,1)
-				Return 2
-			Case $saveup
-				GUIDelete($GUI)
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
-				If @error Then Return
-				pomfload(@TempDir & "\pomf.png")
-				FileMove(@TempDir & "\pomf.png",$path,1)
-				Return 3
-			Case $view
-				ShellExecute(@TempDir & "\pomf.png")
-		EndSwitch
-	WEnd
-EndFunc
-
 Func pomfload($sImagePath)
 	Local $sUserAgent = 'User-Agent: AutoIT-pomfloader (v. 0.1 alpha) p-please dont ban'
 	Local $hSession = _WinHttpOpen($sUserAgent)
