@@ -49,15 +49,15 @@ Func pomfGUI()
 				FileDelete(@TempDir & "\pomf.png")
 				Return 1
 			Case $save
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png",$GUI)
-				If @error Then Return
 				GUIDelete($GUI)
+				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
+				If @error Then Return
 				FileMove(@TempDir & "\pomf.png",$path,1)
 				Return 2
 			Case $saveup
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png",$GUI)
-				If @error Then Return
 				GUIDelete($GUI)
+				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
+				If @error Then Return
 				pomfload(@TempDir & "\pomf.png")
 				FileMove(@TempDir & "\pomf.png",$path,1)
 				Return 3
