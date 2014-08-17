@@ -1,8 +1,9 @@
 #Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Icon=pomf.ico
-#AutoIt3Wrapper_Res_Fileversion=2.0
+#AutoIt3Wrapper_Outfile=.\bin\pomf.exe
 #AutoIt3Wrapper_Res_Comment=pomf.se client
 #AutoIt3Wrapper_Res_Description=pomf.se client
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.0
 #AutoIt3Wrapper_Res_Icon_Add=.\2.ico,12
 #AutoIt3Wrapper_Res_Icon_Add=.\3.ico,13
 #AutoIt3Wrapper_Res_Icon_Add=.\4.ico,14
@@ -11,10 +12,10 @@
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #cs ----------------------------------------------------------------------------
 
- AutoIt Version: 3.3.11.0 (Beta)
- Author:    subnet-
+	AutoIt Version: 3.3.11.0 (Beta)
+	Author:    subnet-
 
- Script Function:
+	Script Function:
 	Open up the program -> Start the pomf client
 	Drag multiple files onto program -> Upload multiple files to pomf.se
 
@@ -25,45 +26,45 @@
 If ($CmdLine[0] <> 0) Then
 	#NoTrayIcon
 	If ($CmdLine[0] > 3) Then
-		If (MsgBox(68,"pomf.se client","Do you really want to upload "&$CmdLine[0]& " Files?") == 7) Then Exit
+		If (MsgBox(68, "pomf.se client", "Do you really want to upload " & $CmdLine[0] & " Files?") == 7) Then Exit
 	EndIf
-	For $i = 1 to $CmdLine[0]
+	For $i = 1 To $CmdLine[0]
 		$filesize = (FileGetSize($CmdLine[$i]) / 1048576)
 		If $filesize <= 50 Then pomfload($CmdLine[$i])
-		If $filesize > 50 Then MsgBox(16,"ERROR", "ERROR: File too big"&@CRLF&StringRegExpReplace($CmdLine[$i], '.+\\', '')&@CRLF&"Max upload size is: 50MB"&@CRLF&"Your File is: "&Round($filesize,2)&"MB")
+		If $filesize > 50 Then MsgBox(16, "ERROR", "ERROR: File too big" & @CRLF & StringRegExpReplace($CmdLine[$i], '.+\\', '') & @CRLF & "Max upload size is: 50MB" & @CRLF & "Your File is: " & Round($filesize, 2) & "MB")
 	Next
 	Exit
 EndIf
 
-_singleton(@ScriptName)
+_Singleton(@ScriptName)
 
-HotKeySet("{PRINTSCREEN}","Screenshot")
+HotKeySet("{PRINTSCREEN}", "Screenshot")
 Opt("TrayMenuMode", 3)
 Opt("TrayOnEventMode", 1)
 TraySetState()
 $tray_GUI = TrayCreateItem("Show GUI after Screencap")
-TrayItemSetOnEvent(-1,"setting_showgui")
-TrayItemSetState(-1,1)
+TrayItemSetOnEvent(-1, "setting_showgui")
+TrayItemSetState(-1, 1)
 TrayCreateItem("")
 Local $tray_screenshot = TrayCreateItem("Screenshot whole Screen")
-TrayItemSetOnEvent(-1,"setting_screenshot")
-TrayItemSetState(-1,1)
+TrayItemSetOnEvent(-1, "setting_screenshot")
+TrayItemSetState(-1, 1)
 Local $tray_screenshot_window = TrayCreateItem("Screenshot active Window")
-TrayItemSetOnEvent(-1,"setting_screenshot_window")
+TrayItemSetOnEvent(-1, "setting_screenshot_window")
 TrayCreateItem("")
 Local $tray_directUpload = TrayCreateItem("Enable Direct Upload")
-TrayItemSetOnEvent(-1,"setting_directupload")
+TrayItemSetOnEvent(-1, "setting_directupload")
 Local $tray_directSave = TrayCreateItem("Enable Direct Save")
-TrayItemSetOnEvent(-1,"setting_directsave")
+TrayItemSetOnEvent(-1, "setting_directsave")
 TrayCreateItem("")
 Local $tray_spasticIcon = TrayCreateItem("Epileptic Icon")
-TrayItemSetOnEvent(-1,"setting_icon")
-TrayItemSetState(-1,1)
+TrayItemSetOnEvent(-1, "setting_icon")
+TrayItemSetState(-1, 1)
 Local $tray_saveSetting = TrayCreateItem("Save Settings")
-TrayItemSetOnEvent(-1,"setting_savesetting")
+TrayItemSetOnEvent(-1, "setting_savesetting")
 TrayCreateItem("")
 Local $tray_exit = TrayCreateItem("Exit")
-TrayItemSetOnEvent(-1,"quit")
+TrayItemSetOnEvent(-1, "quit")
 TraySetToolTip("pomf client v2.0 by subnet-")
 
 Global $noGUI = False
@@ -72,16 +73,12 @@ Global $directUpload = False
 Global $screenshot_window = False
 Global $no_spastic = False
 Global $savesetting = False
+Global $GUI
 
-	;1=window screenshot
-	;2=direct upload
-	;4=direct save
-	;8=icon
-	;16=save settings
-$settings = RegRead("HKEY_CLASSES_ROOT\*\shell\pomf","Settings")
-If @error then
+$settings = RegRead("HKEY_CLASSES_ROOT\*\shell\pomf", "Settings")
+If @error Then
 	$settings = 0
-Else
+Else;switch case continuecase
 	If (Mod($settings, 2) == 1) Then
 		setting_screenshot_window()
 		$settings -= 1
@@ -104,30 +101,33 @@ Else
 	EndIf
 EndIf
 
-RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf","","REG_SZ","Upload to pomf.se")
-RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf","Icon","REG_SZ", @ScriptFullPath)
-RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf\command","","REG_SZ",@ScriptFullPath&' "%1"')
+RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf", "", "REG_SZ", "Upload to pomf.se")
+RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf", "Icon", "REG_SZ", @ScriptFullPath)
+RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf\command", "", "REG_SZ", @ScriptFullPath & ' "%1"')
+pomfidle()
 
-$spastic = 45; photoshop said the original value was 30, oh well
-while True
-	If $no_spastic Then
-		TraySetIcon()
-		Sleep($spastic * 10)
-	Else
-		Sleep($spastic)
-		TraySetIcon(@ScriptFullPath, 12)
-		Sleep($spastic)
-		TraySetIcon(@ScriptFullPath, 13)
-		Sleep($spastic)
-		TraySetIcon(@ScriptFullPath, 14)
-		Sleep($spastic)
-		TraySetIcon(@ScriptFullPath, 15)
-		Sleep($spastic)
-		TraySetIcon(@ScriptFullPath, 16)
-		Sleep($spastic)
-		TraySetIcon()
-	EndIf
-WEnd
+Func pomfidle()
+	$spastic = 45; photoshop said the original value was 30, oh well
+	While True
+		If $no_spastic Then
+			TraySetIcon()
+			Sleep($spastic * 20)
+		Else
+			Sleep($spastic)
+			TraySetIcon(@ScriptFullPath, 12)
+			Sleep($spastic)
+			TraySetIcon(@ScriptFullPath, 13)
+			Sleep($spastic)
+			TraySetIcon(@ScriptFullPath, 14)
+			Sleep($spastic)
+			TraySetIcon(@ScriptFullPath, 15)
+			Sleep($spastic)
+			TraySetIcon(@ScriptFullPath, 16)
+			Sleep($spastic)
+			TraySetIcon()
+		EndIf
+	WEnd
+EndFunc
 
 Func quit()
 	If $screenshot_window Then $settings += 1
@@ -135,121 +135,111 @@ Func quit()
 	If $directSave Then $settings += 4
 	If $no_spastic Then $settings += 8
 	If $savesetting Then $settings += 16
-	If $savesetting Then RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf","Settings","REG_SZ",$settings)
-	If ($savesetting == False) then RegDelete("HKEY_CLASSES_ROOT\*\shell\pomf")
+	If $savesetting Then RegWrite("HKEY_CLASSES_ROOT\*\shell\pomf", "Settings", "REG_SZ", $settings)
+	If ($savesetting == False) Then RegDelete("HKEY_CLASSES_ROOT\*\shell\pomf")
 	Exit
-EndFunc
+EndFunc   ;==>quit
 
 Func setting_icon()
 	If $no_spastic Then
-		TrayItemSetState($tray_spasticIcon,1)
-	else
-		TrayItemSetState($tray_spasticIcon,4)
+		TrayItemSetState($tray_spasticIcon, 1)
+	Else
+		TrayItemSetState($tray_spasticIcon, 4)
 	EndIf
-	$no_spastic = not $no_spastic
-EndFunc
+	$no_spastic = Not $no_spastic
+EndFunc   ;==>setting_icon
 
 Func setting_savesetting()
 	If $savesetting Then
-		TrayItemSetState($tray_saveSetting,4)
+		TrayItemSetState($tray_saveSetting, 4)
 	Else
-		TrayItemSetState($tray_saveSetting,1)
+		TrayItemSetState($tray_saveSetting, 1)
 	EndIf
 	$savesetting = Not $savesetting
-EndFunc
+EndFunc   ;==>setting_savesetting
 
 Func Screenshot()
-	If $screenshot_window = False then Screenshot_png()
-	If $screenshot_window = True then Screenshot_window_png()
-	If $directUpload = True Then pomfload(@TempDir & "\pomf.png")
-	If $directSave = True Then FileMove(@TempDir & "\pomf.png",@UserProfileDir & "\Pictures\"&"pomf "&@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
-	If $noGUI = False Then pomfGUI()
-EndFunc
+	If $screenshot_window = False Then Local $sFile = Screenshot_png()
+	If $screenshot_window = True Then Local $sFile = Screenshot_window_png()
+	If $directSave = True Then FileWrite(@UserProfileDir & "\Pictures\" & "pomf " & @YEAR & "." & @MON & "." & @MDAY & " - " & @HOUR & "." & @MIN & "." & @SEC & ".jpg", $sFile)
+	If $directUpload = True Then pomfload("", $sFile)
+	If $noGUI = False Then pomfGUI($sFile)
+EndFunc   ;==>Screenshot
 
 Func setting_screenshot()
 	$screenshot_window = False
-	TrayItemSetState($tray_screenshot,1)
-	TrayItemSetState($tray_screenshot_window,4)
-EndFunc
+	TrayItemSetState($tray_screenshot, 1)
+	TrayItemSetState($tray_screenshot_window, 4)
+EndFunc   ;==>setting_screenshot
 
 Func setting_screenshot_window()
 	$screenshot_window = True
-	TrayItemSetState($tray_screenshot_window,1)
-	TrayItemSetState($tray_screenshot,4)
-EndFunc
+	TrayItemSetState($tray_screenshot_window, 1)
+	TrayItemSetState($tray_screenshot, 4)
+EndFunc   ;==>setting_screenshot_window
 
 Func setting_showgui()
 	$noGUI = False
 	$directSave = False
 	$directUpload = False
-	TrayItemSetState($tray_GUI,1)
-	TrayItemSetState($tray_directSave,4)
-	TrayItemSetState($tray_directUpload,4)
-EndFunc
+	TrayItemSetState($tray_GUI, 1)
+	TrayItemSetState($tray_directSave, 4)
+	TrayItemSetState($tray_directUpload, 4)
+EndFunc   ;==>setting_showgui
 
 Func setting_directupload()
-	If (($directSave = False) And ($directUpload = True)) Then return setting_showgui()
+	If (($directSave = False) And ($directUpload = True)) Then Return setting_showgui()
 	$noGUI = True
-	$directUpload = not $directUpload
-	if $directUpload = True Then
-		TrayItemSetState($tray_GUI,4)
-		TrayItemSetState($tray_directUpload,1)
+	$directUpload = Not $directUpload
+	If $directUpload = True Then
+		TrayItemSetState($tray_GUI, 4)
+		TrayItemSetState($tray_directUpload, 1)
 	Else
-		TrayItemSetState($tray_directUpload,4)
+		TrayItemSetState($tray_directUpload, 4)
 	EndIf
-EndFunc
+EndFunc   ;==>setting_directupload
 
 Func setting_directsave()
-	If (($directSave = True) And ($directUpload = False)) Then return setting_showgui()
+	If (($directSave = True) And ($directUpload = False)) Then Return setting_showgui()
 	$noGUI = True
-	$directSave = not $directSave
-	if $directSave = True Then
-		TrayItemSetState($tray_GUI,4)
-		TrayItemSetState($tray_directSave,1)
+	$directSave = Not $directSave
+	If $directSave = True Then
+		TrayItemSetState($tray_GUI, 4)
+		TrayItemSetState($tray_directSave, 1)
 	Else
-		TrayItemSetState($tray_directSave,4)
+		TrayItemSetState($tray_directSave, 4)
 	EndIf
-EndFunc
+EndFunc   ;==>setting_directsave
 
-Func pomfGUI()
-	Local $GUI = GUICreate("Pomf Client",197,120,-1,-1,$WS_SYSMENU,$WS_EX_TOPMOST)
-	GUICtrlCreateLabel("Image Saved",0,10,197,20,$SS_CENTER)
-	Local $upload = GUICtrlCreateButton("Upload",10,35,80,20)
-	Local $save = GUICtrlCreateButton("Save",100,35,80,20)
-	Local $saveup = GUICtrlCreateButton("Save+Upload",10,62,80,20)
-	Local $view = GUICtrlCreateButton("View",100,62,80,20)
+Func pomfGUI($sFile)
+	GUIDelete($GUI)
+	$GUI = GUICreate("Pomf Client", 197, 120, -1, -1, $WS_SYSMENU, $WS_EX_TOPMOST)
+	GUICtrlCreateLabel("Image Saved", 0, 10, 197, 20, $SS_CENTER)
+	Local $upload = GUICtrlCreateButton("Upload", 10, 35, 80, 20)
+	Local $save = GUICtrlCreateButton("Save", 100, 35, 80, 20)
+	Local $saveup = GUICtrlCreateButton("Save+Upload", 10, 62, 80, 20)
+	Local $view = GUICtrlCreateButton("View", 100, 62, 80, 20)
 	GUISetState(@SW_SHOW)
-
 	While 1
 		Switch GUIGetMsg()
 			Case $GUI_EVENT_CLOSE
 				GUIDelete($GUI)
-				FileDelete(@TempDir & "\pomf.png")
-				Return 0
+				$sFile = ""
+				pomfidle()
 			Case $upload
-				GUIDelete($GUI)
-				pomfload(@TempDir & "\pomf.png")
-				FileDelete(@TempDir & "\pomf.png")
-				Return 0
+				pomfload("", $sFile)
 			Case $save
 				GUIDelete($GUI)
-				HotKeySet("{PRINTSCREEN}")
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,"pomf "&@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
-				If @error Then Return HotKeySet("{PRINTSCREEN}","Screenshot")
-				HotKeySet("{PRINTSCREEN}","Screenshot")
-				FileMove(@TempDir & "\pomf.png",$path,1)
-				Return 0
+				FileWrite(@UserProfileDir & "\Pictures\" & "pomf " & @YEAR & "." & @MON & "." & @MDAY & " - " & @HOUR & "." & @MIN & "." & @SEC & ".jpg", $sFile)
 			Case $saveup
 				GUIDelete($GUI)
-				HotKeySet("{PRINTSCREEN}")
-				$path = FileSaveDialog("Save Image","","Picture (*.png)",18,"pomf "&@YEAR&"."&@MON&"."&@MDAY&" - "&@HOUR&"."&@MIN&"."&@SEC&".png")
-				If @error Then Return HotKeySet("{PRINTSCREEN}","Screenshot")
-				HotKeySet("{PRINTSCREEN}","Screenshot")
-				pomfload(@TempDir & "\pomf.png")
-				FileMove(@TempDir & "\pomf.png",$path,1)
-				Return 0
+				FileWrite(@UserProfileDir & "\Pictures\" & "pomf " & @YEAR & "." & @MON & "." & @MDAY & " - " & @HOUR & "." & @MIN & "." & @SEC & ".jpg", $sFile)
+				pomfload("", $sFile)
 			Case $view
-				ShellExecute(@TempDir & "\pomf.png")
+				FileWrite(@TempDir & "\pomf.jpg", $sFile)
+				ShellExecute(@TempDir & "\pomf.jpg")
+				WinWaitClose("pomf.jpg")
+				FileDelete(@TempDir & "\pomf.jpg")
 		EndSwitch
 	WEnd
-EndFunc
+EndFunc   ;==>pomfGUI
