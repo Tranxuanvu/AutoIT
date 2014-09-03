@@ -17,6 +17,10 @@ Stable pomf client
 Press PRINT/PRINTSCREEN to save an image/upload an image to pomf
 upload realised via WinHTTP
 
+##### WindowInfo
+Shows the visible text of a Window for easy copy/paste
+Useful to get the Kanji of Error-Messages
+
 ##### some loose UDF's / au3's
 md5.au3 - AutoIT md5 function
 
