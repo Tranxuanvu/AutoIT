@@ -21,13 +21,13 @@
       <KeyCode>33</KeyCode>
       <Direction>down</Direction>
       <Action>CMD</Action>
-      <Sequence>33</Sequence>
+      <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
       <ScriptSource></ScriptSource>
       <SCText>0</SCText>
       <SCParams></SCParams>
-      <Command>.\send.exe -send {pgup} 1</Command>
+      <Command>.\remote.exe 1</Command>
     </Macro>
     <Macro>
       <Device>Remote</Device>
@@ -35,13 +35,13 @@
       <KeyCode>66</KeyCode>
       <Direction>down</Direction>
       <Action>CMD</Action>
-      <Sequence>179</Sequence>
+      <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
       <ScriptSource></ScriptSource>
       <SCText>0</SCText>
       <SCParams></SCParams>
-      <Command>.\send.exe -send {SPACE} 1</Command>
+      <Command>.\remote.exe 3</Command>
     </Macro>
     <Macro>
       <Device>Remote</Device>
@@ -49,20 +49,20 @@
       <KeyCode>34</KeyCode>
       <Direction>down</Direction>
       <Action>CMD</Action>
-      <Sequence>34</Sequence>
+      <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
       <ScriptSource></ScriptSource>
       <SCText>0</SCText>
       <SCParams></SCParams>
-      <Command>.\send.exe -send {pgdn} 1</Command>
+      <Command>.\remote.exe 2</Command>
     </Macro>
     <Macro>
       <Device>Remote</Device>
       <Name>Button_Unten</Name>
       <KeyCode>27</KeyCode>
       <Direction>down</Direction>
-      <Action>SEQ</Action>
+      <Action>CMD</Action>
       <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
@@ -76,7 +76,7 @@
       <Name>Button_Unten_Alt</Name>
       <KeyCode>116</KeyCode>
       <Direction>down</Direction>
-      <Action>SEQ</Action>
+      <Action>CMD</Action>
       <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
@@ -90,7 +90,7 @@
       <Name>Button_Unten_Alt2</Name>
       <KeyCode>16</KeyCode>
       <Direction>down</Direction>
-      <Action>SEQ</Action>
+      <Action>CMD</Action>
       <Sequence></Sequence>
       <SCEvent></SCEvent>
       <XPLCommand></XPLCommand>
@@ -120,14 +120,6 @@
     <Mouse>
       <Name>Mouse3</Name>
       <SystemID>\\?\HID#VID_046D&amp;PID_C050#6&amp;D1DCA07&amp;1&amp;0000#{378DE44C-56EF-11D1-BC8C-00A0C91405DD}</SystemID>
-    </Mouse>
-    <Keyboard>
-      <Name>Keyb1</Name>
-      <SystemID>\\?\HID#VID_1D57&amp;PID_AD03&amp;MI_00#7&amp;36B6373B&amp;0&amp;0000#{884B96C3-56EF-11D1-BC8C-00A0C91405DD}</SystemID>
-    </Keyboard>
-    <Mouse>
-      <Name>Mouse4</Name>
-      <SystemID>\\?\HID#VID_1D57&amp;PID_AD03&amp;MI_01&amp;COL01#7&amp;E4B8972&amp;0&amp;0000#{378DE44C-56EF-11D1-BC8C-00A0C91405DD}</SystemID>
     </Mouse>
   </Devices>
   <Map>
