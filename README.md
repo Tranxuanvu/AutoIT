@@ -16,6 +16,7 @@ Shows you the parameters a program was called with (you need to replace the prog
 Stable pomf client
 Press PRINT/PRINTSCREEN to save an image/upload an image to pomf
 upload realised via WinHTTP
+POMF IS DOWN. Rest in Peace.
 
 ##### WindowInfo
 Shows the visible text of a Window for easy copy/paste
