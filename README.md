@@ -13,10 +13,10 @@ A HotKey_t.au3 that compiles to HotKey.exe which shows you a button prompt
 Shows you the parameters a program was called with (you need to replace the program you want to extract the parameters from with this one)
 
 ##### Pomf
-Stable pomf client
-Press PRINT/PRINTSCREEN to save an image/upload an image to pomf
-upload realised via WinHTTP
-POMF IS DOWN. Rest in Peace.
+Stable pomf client  
+Press PRINT/PRINTSCREEN to save an image/upload an image to pomf  
+upload realised via WinHTTP  
+POMF IS DOWN. Rest in Peace.  
 
 ##### WindowInfo
 Shows the visible text of a Window for easy copy/paste
